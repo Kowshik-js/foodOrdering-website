@@ -1,69 +1,83 @@
 import { LOGO_URL } from "../utils/constants";
 import { useState, useContext } from "react";
-import {Link} from "react-router-dom";
+import { Link } from "react-router-dom";
 import useOnLineStatus from "../utils/useOnlineStates";
 import UserContext from "../utils/userContext";
 import { useSelector } from "react-redux";
 
-
 const Header = () => {
+  const [btnNameReact, setbtnNameReact] = useState("Login");
 
-    const [btnNameReact, setbtnNameReact] = useState("Login");
+  const onlineStatus = useOnLineStatus();
 
-    const onlineStatus=useOnLineStatus();
+  const { loggedInUser } = useContext(UserContext);
+  console.log(loggedInUser);
 
-    const {loggedInUser}=useContext(UserContext);
-    console.log(loggedInUser);
+  const cartItems = useSelector((store) => store.cart.items);
 
-    //subscribing to the store using useSelector
-    const cartItems=useSelector((store)=>store.cart.items);
+  return (
+    <div className="flex justify-between items-center bg-pink-100 shadow-lg p-4">
+      <div className="logo-container">
+        <img className="w-56" src={LOGO_URL} alt="Logo" />
+      </div>
 
-
-    return (
-        <div className="flex justify-between bg-pink-100 shadow-lg sn:bg-yellow-50 lg:bg-green-50">
-            <div className="logo-container">
-                <img className="w-56" src={LOGO_URL}/>
-            </div>
-            <div className="flex items-center">
-                <ul className="flex p-4 m-4">
-                    <li className="px-4">
-                    online Status:{onlineStatus ? "✅" : "✅ "}
-                    </li>
-
-                    <li className="px-4">
-                    <Link to="/">Home</Link>
-                    </li>
-
-                    <li className="px-4">
-                    <Link to="/about">About Us</Link>
-                    </li>
-
-                    <li className="px-4">
-                    <Link to="/contact">contact Us</Link>
-                    </li>
-                    
-                    <li className="px-4">
-                    <Link to="/grocery">Grocery</Link>
-                    </li>
-
-                    <li className="px-4 font-bold text-xl">
-                    <Link to="/cart">cart-</Link>
-                    ({cartItems.length} items)
-                    </li>
-
-                    <li className="px-4 font-bold">{loggedInUser}</li>
-                    <button className="login"
-                    onClick={()=>{
-                       btnNameReact === "Login"
-                       ? setbtnNameReact("Logout")
-                       : setbtnNameReact("Login");
-                    }}
-                    >
-                        {btnNameReact}
-                    </button>
-                </ul>
-            </div>
-        </div>
-    );
+      <div className="flex items-center">
+        <ul className="flex space-x-6 text-gray-700 font-semibold">
+          <li>
+            <span className="text-sm font-bold">
+              Online Status: {onlineStatus ? "✅" : "✅"}
+            </span>
+          </li>
+          <li>
+            <Link
+              className="hover:text-gray-900 transition-colors text-lg font-extrabold uppercase tracking-wider"
+              to="/"
+            >
+              Home
+            </Link>
+          </li>
+          <li>
+            <Link
+              className="hover:text-gray-900 transition-colors text-lg font-extrabold uppercase tracking-wider"
+              to="/about"
+            >
+              About Us
+            </Link>
+          </li>
+          <li>
+            <Link
+              className="hover:text-gray-900 transition-colors text-lg font-extrabold uppercase tracking-wider"
+              to="/contact"
+            >
+              Contact Us
+            </Link>
+          </li>
+          <li>
+            <Link
+              className="hover:text-gray-900 transition-colors text-lg font-extrabold uppercase tracking-wider"
+              to="/grocery"
+            >
+              Grocery
+            </Link>
+          </li>
+          <li className="font-bold text-xl tracking-wide">
+            <Link to="/cart" className="hover:text-gray-900 transition-colors">
+              Cart - ({cartItems.length} items)
+            </Link>
+          </li>
+          <li className="font-extrabold tracking-wide">{loggedInUser}</li>
+          <button
+            className="ml-4 px-4 py-2 bg-gray-700 text-white font-semibold rounded-lg hover:bg-gray-600 transition-all"
+            onClick={() => {
+              setbtnNameReact(btnNameReact === "Login" ? "Logout" : "Login");
+            }}
+          >
+            {btnNameReact}
+          </button>
+        </ul>
+      </div>
+    </div>
+  );
 };
+
 export default Header;
